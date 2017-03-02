@@ -1,0 +1,5 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ 'hello %name%'|trans({'%name%': slug}) }}
+{% endblock %}

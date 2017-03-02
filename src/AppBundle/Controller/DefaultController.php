@@ -9,6 +9,17 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
+     * @Route("/hello/{slug}")
+     * @Route("/hello/", defaults={"slug"="word"})
+     */
+    public function helloAction(Request $request, string $slug)
+    {
+        return $this->render('default/hello.html.twig', [
+            'slug' => $slug
+        ]);
+    }
+
+    /**
      * @Route("/", name="homepage")
      */
     public function indexAction(Request $request)
