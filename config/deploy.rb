@@ -22,9 +22,11 @@ set :deploy_to, '/home/jonathan/temp/cdpn/cap/remote'
 
 # Default value for :linked_files is []
 # append :linked_files, "config/database.yml", "config/secrets.yml"
+# append :linked_files, 'app/config/parameters.yml'
 
 # Default value for linked_dirs is []
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
+append :linked_dirs, 'web/uploads'
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -34,10 +36,11 @@ set :deploy_to, '/home/jonathan/temp/cdpn/cap/remote'
 
 namespace :deploy do
     after :updated, :composer do
-        on roles(:web) do
-            within release_path do
-                execute :composer, :install
-            end
-        end
+        invoke 'php:composer'
+        invoke 'apache:conf'
+
+        invoke 'symfony:setfacl'
+        invoke 'symfony:cache'
+        # TODO: Add others custom tasks.
     end
 end

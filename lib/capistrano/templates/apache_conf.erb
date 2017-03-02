@@ -1,0 +1,34 @@
+<VirtualHost *:80>
+    ServerName <%= fetch(:server_name) %>
+
+    AddHandler php-cgi .php
+    Action php-cgi /cgi-bin-php/php-cgi-7.0.9-1
+
+    DocumentRoot <%= fetch(:site_root) %>
+    DirectoryIndex app.php
+
+    # Available loglevels: trace8, ...., trace1, debug, info, notice, warn
+    # error, crit, alert, emerg.
+    # It is also possible to configure the loglevel for particular
+    # modules, e.g.
+    LogLevel info
+    #ssl:warn
+
+    ErrorLog /var/log/apache2/<%= fetch(:server_name) %>-web-error.log
+    CustomLog /var/log/apache2/<%= fetch(:server_name) %>-access.log combined
+
+    <Directory "<%= fetch(:site_root) %>">
+        Require all granted
+        AllowOverride none
+        Order allow,deny
+        Allow from All
+
+        Options Indexes FollowSymLinks MultiViews
+
+        <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteRule ^(.*)$ /app_dev.php [QSA,L]
+        </IfModule>
+     </Directory>
+</VirtualHost>
